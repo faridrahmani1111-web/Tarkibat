@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1026">
+<title>سیزده‌بدر پیوندها | مهندس رحمانی</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg1:#0b1026; --bg2:#16244a;
+  --card:rgba(255,255,255,.06);
+  --line:rgba(255,255,255,.14);
+  --ink:#e8eefc; --dim:#9fb0d0;
+  --accent:#22d3ee; --accent2:#fbbf24;
+  --good:#34d399; --bad:#fb7185;
+  --shadow:0 12px 34px rgba(0,0,0,.42);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;min-height:100%}
+body{
+  font-family:'Vazirmatn',system-ui,Tahoma,sans-serif;
+  background:
+    radial-gradient(900px 520px at 50% -8%, #24407f 0%, transparent 62%),
+    radial-gradient(700px 420px at 100% 100%, #123047 0%, transparent 60%),
+    linear-gradient(180deg,var(--bg1),#060912 100%);
+  background-attachment:fixed;
+  color:var(--ink);
+  min-height:100dvh;
+  overflow-x:hidden;
+  line-height:1.85;
+  font-size:15px;
+}
+#app{max-width:540px;margin:0 auto;padding:10px 12px calc(28px + env(safe-area-inset-bottom));min-height:100dvh;display:flex;flex-direction:column}
+.topbar{display:flex;align-items:center;gap:10px;padding:8px 4px 12px}
+.brand{font-weight:900;font-size:14px;letter-spacing:.2px;display:flex;align-items:center;gap:6px}
+.brand .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent)}
+.spacer{flex:1}
+.iconbtn{background:rgba(255,255,255,.07);border:1px solid var(--line);color:var(--ink);
+  width:38px;height:38px;border-radius:12px;font-size:17px;display:grid;place-items:center;cursor:pointer}
+.iconbtn:active{transform:scale(.93)}
+.prog{display:flex;gap:6px;margin:0 2px 12px}
+.prog div{flex:1;height:6px;border-radius:99px;background:rgba(255,255,255,.1)}
+.prog div.on{background:linear-gradient(90deg,var(--accent),#60a5fa);box-shadow:0 0 14px rgba(34,211,238,.5)}
+.card{
+  background:linear-gradient(180deg,rgba(255,255,255,.085),rgba(255,255,255,.035));
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:16px 15px;
+  box-shadow:var(--shadow);
+  backdrop-filter:blur(8px);
+  animation:pop .35s ease both;
+}
+@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
+.card+.card{margin-top:12px}
+h1{font-size:22px;margin:6px 0 4px;font-weight:900;letter-spacing:-.3px}
+h2{font-size:17px;margin:0 0 8px;font-weight:800;display:flex;align-items:center;gap:7px}
+h2 .num{background:linear-gradient(135deg,var(--accent),#3b82f6);color:#04121c;font-size:12px;
+  width:23px;height:23px;border-radius:8px;display:grid;place-items:center;font-weight:900;flex:none}
+p{margin:0 0 9px;color:var(--dim);font-size:14px}
+p b,li b{color:var(--ink)}
+.sub{color:var(--dim);font-size:13.5px}
+.hint{background:rgba(34,211,238,.09);border:1px solid rgba(34,211,238,.28);
+  border-radius:14px;padding:9px 12px;font-size:13.5px;color:#bff2ff;margin:10px 0}
+.hint.warn{background:rgba(251,191,36,.1);border-color:rgba(251,191,36,.3);color:#ffe6a8}
+.hint.ok{background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.3);color:#b6f5dd}
+.btn{
+  width:100%;border:0;border-radius:16px;padding:14px;font-family:inherit;font-weight:800;font-size:15px;
+  cursor:pointer;transition:transform .12s,filter .2s;color:#04121c;
+  background:linear-gradient(135deg,#22d3ee,#38bdf8);box-shadow:0 8px 22px rgba(34,211,238,.3);
+  display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px;
+}
+.btn:active{transform:scale(.97)}
+.btn.ghost{background:rgba(255,255,255,.08);color:var(--ink);box-shadow:none;border:1px solid var(--line)}
+.btn.gold{background:linear-gradient(135deg,#fbbf24,#f59e0b);box-shadow:0 8px 22px rgba(251,191,36,.28)}
+.btn.green{background:linear-gradient(135deg,#34d399,#10b981);box-shadow:0 8px 22px rgba(52,211,153,.28)}
+.btn.small{padding:11px;font-size:13.5px;border-radius:14px}
+.choices{display:grid;gap:9px;margin-top:10px}
+.choices.two{grid-template-columns:1fr 1fr}
+.choices.three{grid-template-columns:1fr 1fr 1fr}
+.chip{
+  border:1.5px solid var(--line);background:rgba(255,255,255,.05);border-radius:16px;
+  padding:12px 8px;text-align:center;cursor:pointer;font-family:inherit;color:var(--ink);
+  font-weight:700;font-size:14px;transition:.18s;
+}
+.chip:active{transform:scale(.96)}
+.chip.sel{border-color:var(--accent);background:rgba(34,211,238,.14);box-shadow:0 0 0 3px rgba(34,211,238,.13)}
+.chip .big{display:block;font-size:20px;font-weight:900;line-height:1.3}
+.chip .sm{display:block;font-size:11.5px;color:var(--dim);font-weight:600}
+.metal{
+  border:1.5px solid var(--line);background:rgba(255,255,255,.05);border-radius:18px;
+  padding:14px 6px;cursor:pointer;color:var(--ink);font-family:inherit;transition:.18s;
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+}
+.metal:active{transform:scale(.95)}
+.metal .orb{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;
+  font-weight:900;font-size:14px;color:#08111f;box-shadow:inset 0 -6px 14px rgba(0,0,0,.25)}
+.metal .nm{font-size:12.5px;font-weight:700}
+.metal .z{font-size:10.5px;color:var(--dim)}
+.stage{
+  background:radial-gradient(120% 90% at 50% 0%,#132347 0%,#0a1122 70%);
+  border:1px solid var(--line);border-radius:20px;overflow:hidden;margin:10px 0;position:relative;
+}
+.stage svg{display:block;width:100%;height:auto}
+.shell{fill:none;stroke:rgba(148,178,230,.35);stroke-width:1.4}
+.elec{fill:#8aa0c7;stroke:#3c4d70;stroke-width:1;pointer-events:none}
+.elec.val{fill:#fbbf24;stroke:#7c4a03}
+.hit{fill:transparent;cursor:pointer}
+.atom .nuc{stroke:rgba(0,0,0,.4);stroke-width:1.6}
+text{font-family:'Vazirmatn',Tahoma,sans-serif}
+.bondline{stroke:rgba(251,191,36,.4);stroke-width:6;stroke-linecap:round;pointer-events:none}
+.sofreh{fill:rgba(251,191,36,.13);stroke:rgba(251,191,36,.65);stroke-width:1.8;stroke-dasharray:5 4;pointer-events:none}
+.sharedE{fill:#fbbf24;stroke:#7c4a03;stroke-width:1;pointer-events:none}
+.badge{font-size:11px;font-weight:900;pointer-events:none}
+.pulse{animation:pulse 1.15s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.status{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.05);
+  border:1px solid var(--line);border-radius:14px;padding:10px 12px;font-size:13.5px;font-weight:700;flex-wrap:wrap}
+.status .pill{background:rgba(34,211,238,.18);color:#a5f0ff;border-radius:9px;padding:2px 9px;font-size:12px}
+.tbl{width:100%;border-collapse:separate;border-spacing:0;font-size:12.5px;overflow:hidden;border-radius:14px;margin-top:8px}
+.tbl th,.tbl td{padding:9px 6px;text-align:center;border-bottom:1px solid rgba(255,255,255,.09)}
+.tbl th{background:rgba(255,255,255,.07);font-weight:800;font-size:12px;color:var(--dim)}
+.tbl td{color:var(--dim)}
+.tbl td.yes{color:var(--good);font-weight:900}
+.tbl td.no{color:var(--bad);font-weight:900}
+.tbl tr:last-child td{border-bottom:0}
+#toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,120%);
+  background:#0f1c34;border:1px solid var(--line);color:var(--ink);padding:11px 18px;border-radius:15px;
+  font-size:13.5px;font-weight:700;box-shadow:var(--shadow);z-index:99;transition:transform .35s cubic-bezier(.2,1.2,.4,1);
+  max-width:88vw;text-align:center}
+#toast.show{transform:translate(-50%,0)}
+#toast.good{border-color:rgba(52,211,153,.5);background:#0c2a22;color:#b6f5dd}
+#toast.bad{border-color:rgba(251,113,133,.5);background:#2b1018;color:#ffd0d8}
+.eq{direction:ltr;text-align:center;font-weight:900;font-size:16px;letter-spacing:.5px;
+  background:rgba(0,0,0,.28);border:1px solid var(--line);border-radius:14px;padding:11px;margin:9px 0;font-family:'Vazirmatn',monospace}
+.eq .plus{color:var(--accent2)}
+.eq .arrow{color:var(--accent);margin:0 4px}
+.fam{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.tag{font-size:11.5px;font-weight:800;padding:4px 10px;border-radius:99px;border:1px solid var(--line);background:rgba(255,255,255,.06)}
+.credit{text-align:center;color:var(--dim);font-size:12.5px;margin-top:16px;line-height:2}
+.credit b{color:var(--accent2)}
+.emoji{font-size:40px;text-align:center;line-height:1;margin:4px 0 6px}
+.legend{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;font-size:11.5px;color:var(--dim);margin-top:6px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-inline-end:4px;vertical-align:middle}
+ul{margin:4px 0 10px;padding-inline-start:18px;color:var(--dim);font-size:13.5px}
+li{margin-bottom:5px}
+.beaker{background:rgba(0,0,0,.3);border-radius:16px;border:1px solid var(--line);padding:10px;text-align:center}
+.bulb{font-size:44px;line-height:1;filter:grayscale(1) brightness(.5);transition:.35s}
+.bulb.on{filter:none;text-shadow:0 0 22px #fbbf24,0 0 44px #f59e0b}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast"></div>
+
+<script>
+/* =========================================================
+   سیزده‌بدر پیوندها — بازی آموزش شیمی
+   سازنده: مهندس رحمانی
+   ========================================================= */
+
+const EL = {
+  H : {n:'هیدروژن',  shells:[1],     c:'#cbd5e1', t:'#0f172a'},
+  O : {n:'اکسیژن',   shells:[2,6],   c:'#ef4444', t:'#ffffff'},
+  S : {n:'گوگرد',    shells:[2,8,6], c:'#eab308', t:'#1a1503'},
+  N : {n:'نیتروژن',  shells:[2,5],   c:'#3b82f6', t:'#ffffff'},
+  Cl: {n:'کلر',      shells:[2,8,7], c:'#22c55e', t:'#06281a'},
+  F : {n:'فلوئور',   shells:[2,7],   c:'#38bdf8', t:'#062335'},
+  Na: {n:'سدیم',     shells:[2,8,1], c:'#a855f7', t:'#ffffff'},
+  Li: {n:'لیتیم',    shells:[2,1],   c:'#ec4899', t:'#ffffff'},
+  Mg: {n:'منیزیم',   shells:[2,8,2], c:'#f97316', t:'#2a1000'}
+};
+const SHELL_R = [16, 31, 46];
+
+/* ---------- Bohr atom renderer ---------- */
+function atomSVG(sym, cx, cy, o){
+  o = o || {};
+  const e = EL[sym];
+  const sc = o.scale == null ? 1 : o.scale;
+  const er = 4.6 * sc;
+  const id = o.id || sym;
+  const st = (o.start == null) ? -90 : o.start;
+  const maxSlot = o.maxSlot || 8;
+  const shells = e.shells.slice();
+  if (o.valence != null) shells[shells.length-1] = Math.max(0, o.valence);
+  let s = '<g class="atom" data-aid="' + id + '">';
+  shells.forEach((n,i)=>{
+    s += '<circle class="shell" cx="'+cx+'" cy="'+cy+'" r="'+(SHELL_R[i]*sc)+'"/>';
+  });
+  const nr = 13*sc;
+  s += '<circle class="nuc" cx="'+cx+'" cy="'+cy+'" r="'+nr+'" fill="'+e.c+'"/>';
+  s += '<text x="'+cx+'" y="'+(cy+4.2*sc)+'" text-anchor="middle" font-size="'+(11*sc)+'" font-weight="800" fill="'+e.t+'">'+sym+'</text>';
+  shells.forEach((n,i)=>{
+    const isV = (i === shells.length-1);
+    const slots = isV ? Math.max(maxSlot, n) : n;
+    for (let k=0;k<n;k++){
+      const a = (st + k*360/slots) * Math.PI/180;
+      const ex = cx + SHELL_R[i]*sc*Math.cos(a);
+      const ey = cy + SHELL_R[i]*sc*Math.sin(a);
+      s += '<circle class="elec '+(isV?'val':'')+'" cx="'+ex+'" cy="'+ey+'" r="'+er+'"/>';
+    }
+  });
+  const nv = shells[shells.length-1];
+  const slotsV = Math.max(maxSlot, nv);
+  const vr = SHELL_R[shells.length-1]*sc;
+  for (let k=0;k<nv;k++){
+    const a = (st + k*360/slotsV) * Math.PI/180;
+    const ex = cx + vr*Math.cos(a);
+    const ey = cy + vr*Math.sin(a);
+    s += '<circle class="hit" data-atom="'+id+'" data-slot="'+k+'" cx="'+ex+'" cy="'+ey+'" r="'+(13*sc)+'"/>';
+  }
+  s += '</g>';
+  return s;
+}
+
+/* ---------- Utilities ---------- */
+const app = document.getElementById('app');
+const toastEl = document.getElementById('toast');
+let toastT = null;
+function toast(msg, kind){
+  toastEl.textContent = msg;
+  toastEl.className = 'show ' + (kind||'');
+  clearTimeout(toastT);
+  toastT = setTimeout(()=>{ toastEl.className=''; }, 2200);
+}
+
+/* ---------- State ---------- */
+const S = {
+  screen : 'intro',
+  ionic  : { completed: [] },
+  cov    : null,
+  covIdx : 0,
+  labSub : 'ionic-solid'
+};
+
+/* =========================================================
+   SCREENS
+   ========================================================= */
+
+function screenIntro(){
+  return `
+  <div class="card">
+    <div class="emoji">🏞️</div>
+    <h1>سیزده‌بدر پیوندها</h1>
+    <p class="sub">یک سفر شیمیایی با دو خانواده نافلز</p>
+    <div class="fam">
+      <span class="tag" style="border-color:rgba(239,68,68,.6)">🔴 اکسیژن</span>
+      <span class="tag" style="border-color:rgba(234,179,8,.6)">🟡 گوگرد</span>
+      <span class="tag" style="border-color:rgba(203,213,225,.6)">⚪ هیدروژن</span>
+    </div>
+    <p><b>خانواده گوگردزاده 👆</b></p>
+    <div class="fam">
+      <span class="tag" style="border-color:rgba(59,130,246,.6)">🔵 نیتروژن</span>
+      <span class="tag" style="border-color:rgba(34,197,94,.6)">🟢 کلر</span>
+      <span class="tag" style="border-color:rgba(56,189,248,.6)">🔷 فلوئور</span>
+    </div>
+    <p><b>خانواده نیتروژن‌پور 👆</b></p>
+    <div class="hint">
+      🌿 این دو خانواده با هم فامیل‌اند و می‌خواهند سیزده‌بدر به طبیعت بروند.
+      قرار شده هر کس <b>غذایش را خودش بیاورد</b> — غذا همان <b>الکترون</b> است!
+      بعضی‌ها الکترون را <b>می‌دهند و می‌گیرند</b>، بعضی‌ها آن را <b>با هم تقسیم می‌کنند</b>.
+    </div>
+    <button class="btn" data-act="go" data-to="ionicIntro">شروع سفر 🚀</button>
+  </div>
+  <div class="card">
+    <h2><span class="num">🎯</span> در این بازی یاد می‌گیری</h2>
+    <ul>
+      <li>تفاوت <b>ترکیب یونی</b> و <b>ترکیب اشتراکی</b></li>
+      <li>رسم <b>پیوند اشتراکی</b> با مدل اتمی بور</li>
+      <li>تفاوت <b>کاتیون</b> و <b>آنیون</b></li>
+      <li>رسانایی برق: جامد یونی نارسانا، مذاب/محلول یونی رسانا</li>
+    </ul>
+    <div class="credit">سازنده: <b>مهندس رحمانی</b></div>
+  </div>`;
+}
+
+/* ---------- IONIC INTRO ---------- */
+function screenIonicIntro(){
+  return `
+  <div class="card">
+    <h2><span class="num">۱</span> مأموریت خرید 🛒</h2>
+    <p><b>اکسیژن</b> (پسر خانواده گوگردزاده) مأمور شده برای سیزده‌بدر خرید کنه:</p>
+    <div style="display:grid;gap:8px;margin:10px 0">
+      <div class="chip" style="text-align:right;padding:12px;cursor:default">
+        <span style="font-size:22px">🥤</span>
+        <b style="margin-inline-start:8px">نوشابه</b>
+        <span style="color:var(--dim);font-size:12px;display:block;margin-top:2px">از مغازه <b style="color:#a855f7">سدیم (Na)</b></span>
+      </div>
+      <div class="chip" style="text-align:right;padding:12px;cursor:default">
+        <span style="font-size:22px">🍟</span>
+        <b style="margin-inline-start:8px">چیپس</b>
+        <span style="color:var(--dim);font-size:12px;display:block;margin-top:2px">از مغازه <b style="color:#f97316">منیزیم (Mg)</b></span>
+      </div>
+      <div class="chip" style="text-align:right;padding:12px;cursor:default">
+        <span style="font-size:22px">🍿</span>
+        <b style="margin-inline-start:8px">پفک</b>
+        <span style="color:var(--dim);font-size:12px;display:block;margin-top:2px">از مغازه <b style="color:#ec4899">لیتیم (Li)</b></span>
+      </div>
+    </div>
+    <div class="hint warn">
+      ⚡ <b>قانون مغازه‌دارها:</b> پول اینجا <b>الکترون</b> است!<br>
+      مغازه‌دارها (فلزها) الکترون اضافه دارند و اکسیژن به الکترون نیاز دارد.
+      پس معامله انجام می‌شه: <b>فلز الکترون می‌دهد، اکسیژن می‌گیرد</b> و هر دو پایدار می‌شوند.
+    </div>
+    <button class="btn" data-act="go" data-to="shopSelect">بریم خرید! 🛍️</button>
+  </div>`;
+}
+
+/* ---------- SHOPS DATA ---------- */
+const SHOPS = {
+  Na: { key:'Na', metal:'Na', metalName:'سدیم', color:'#a855f7',
+        itemName:'نوشابه', itemIcon:'🥤',
+        product:'Na₂O', productName:'سدیم اکسید',
+        atomsCount:2, ePerAtom:1 },
+  Mg: { key:'Mg', metal:'Mg', metalName:'منیزیم', color:'#f97316',
+        itemName:'چیپس', itemIcon:'🍟',
+        product:'MgO', productName:'منیزیم اکسید',
+        atomsCount:1, ePerAtom:2 },
+  Li: { key:'Li', metal:'Li', metalName:'لیتیم', color:'#ec4899',
+        itemName:'پفک', itemIcon:'🍿',
+        product:'Li₂O', productName:'لیتیم اکسید',
+        atomsCount:2, ePerAtom:1 }
+};
+
+/* ---------- SHOP SELECT ---------- */
+function screenShopSelect(){
+  const done = S.ionic.completed;
+  const keys = ['Na','Mg','Li'];
+  const cards = keys.map(k=>{
+    const sh = SHOPS[k];
+    const isDone = done.indexOf(k) >= 0;
+    return `
+      <button class="metal" data-act="pickShop" data-k="${k}"
+        style="${isDone ? 'opacity:.6;border-color:rgba(52,211,153,.6)' : ''}">
+        <span class="orb" style="background:${isDone ? '#34d399' : sh.color};color:${isDone?'#04121c':'#08111f'}">
+          ${isDone ? '✓' : k}
+        </span>
+        <span class="nm">${sh.metalName}</span>
+        <span class="z">${sh.itemIcon} ${sh.itemName}</span>
+      </button>`;
+  }).join('');
+  const remaining = 3 - done.length;
+  return `
+  <div class="card">
+    <h2><span class="num">۱</span> انتخاب مغازه 🏪</h2>
+    <p>اکسیژن به کدام مغازه برود؟</p>
+    <div class="hint">
+      ${remaining > 0
+        ? '🛍️ <b>' + remaining + ' مغازه</b> باقی مانده.'
+        : '✅ همه مغازه‌ها رفته شده!'}
+    </div>
+    <div class="choices three">${cards}</div>
+    ${done.length === 3
+      ? '<button class="btn green" data-act="backToShops">ادامه به پیک‌نیک 🌳</button>'
+      : ''}
+  </div>`;
+}
+
+/* ---------- SHOP PLAY ---------- */
+function shopSetup(k){
+  const sh = SHOPS[k];
+  const atoms = [];
+  for (let i=0;i<sh.atomsCount;i++){
+    atoms.push({ sym: sh.metal, give: sh.ePerAtom, given: 0 });
+  }
+  S.ionic.shop = k;
+  S.ionic.atoms = atoms;
+  S.ionic.gained = 0;
+  S.screen = 'shopPlay';
+}
+
+function shopSVG(){
+  const I = S.ionic;
+  const sh = SHOPS[I.shop];
+  const oVal = 6 + I.gained;
+  const n = I.atoms.length;
+  let s = '<svg viewBox="0 0 400 260">';
+  s += atomSVG('O', 92, 130, {id:'O', scale:1.0, start:0, maxSlot:8, valence:oVal});
+  I.atoms.forEach((a,i)=>{
+    const y = n === 1 ? 130 : (i === 0 ? 72 : 188);
+    const val = a.give - a.given;
+    s += atomSVG(a.sym, 305, y, {id:'M'+i, scale:0.78, start:180, maxSlot:8, valence:val});
+    if (a.given >= a.give){
+      s += '<rect x="283" y="'+(y-72)+'" width="44" height="20" rx="10" fill="#34d399"/>';
+      s += '<text class="badge" x="305" y="'+(y-58)+'" text-anchor="middle" fill="#04121c">'+a.sym+' '+(a.give===2?'2+':'+')+'</text>';
+    }
+  });
+  if (I.gained >= 2){
+    s += '<rect x="68" y="46" width="48" height="20" rx="10" fill="#fb7185"/>';
+    s += '<text class="badge" x="92" y="60" text-anchor="middle" fill="#04121c">O 2−</text>';
+  }
+  s += '</svg>';
+  return s;
+}
+
+function screenShopPlay(){
+  const I = S.ionic;
+  const sh = SHOPS[I.shop];
+  const totalGive = I.atoms.reduce((a,b)=>a+b.give,0);
+  const given = I.atoms.reduce((a,b)=>a+b.given,0);
+  const done = I.gained >= 2;
+
+  let hint;
+  if (done) hint = '🎉 پیوند یونی تشکیل شد و ' + sh.itemName + ' خریداری شد!';
+  else if (I.gained === 0) hint = '👆 روی <b>الکترون لایه آخر فلز</b> (دایره طلایی سمت راست) ضربه بزن تا به اکسیژن داده شود.';
+  else hint = '✅ خوب پیش می‌ری! اکسیژن به ۱ الکترون دیگر نیاز دارد.';
+
+  const metalChg = sh.ePerAtom === 2 ? '2+' : '+';
+  const coeff = sh.atomsCount === 2 ? '2' : '';
+
+  return `
+  <div class="card">
+    <h2><span class="num">۱</span> مغازه ${sh.metalName} — ${sh.itemIcon} ${sh.itemName}</h2>
+    <div class="hint ${done?'ok':''}">${hint}</div>
+    <div class="stage">${shopSVG()}</div>
+    <div class="status">
+      <span class="pill">اکسیژن: ${I.gained}/۲ الکترون</span>
+      <span class="pill">فلز داده: ${given}/${totalGive}</span>
+    </div>
+    ${done ? `
+      <div class="eq" style="margin-top:12px">
+        ${coeff}${sh.metal} <span class="arrow">→</span> ${coeff}${sh.metal}<sup>${metalChg}</sup> + ${totalGive} e⁻<br>
+        O + 2e⁻ <span class="arrow">→</span> O<sup>2−</sup>
+      </div>
+      <div class="eq">${coeff}${sh.metal} + O <span class="arrow">→</span> ${sh.product}</div>
+      <div class="hint ok">
+        🔵 <b>${sh.metal}<sup>${metalChg}</sup></b> = <b>کاتیون</b> (بار مثبت)<br>
+        🔴 <b>O<sup>2−</sup></b> = <b>آنیون</b> (بار منفی)<br>
+        🛍️ <b>${sh.itemName} ${sh.itemIcon}</b> خریداری شد → <b>${sh.productName}</b>
+      </div>
+      <button class="btn green" data-act="backToShops">
+        ${I.completed.length === 3 ? 'همه خریدها انجام شد ✅' : 'برگرد به مغازه‌ها 🏪'}
+      </button>
+    ` : `<p style="font-size:12.5px;text-align:center;color:var(--dim)">بدون الکترون، ${sh.itemName}‌ای در کار نیست! ${sh.itemIcon}</p>`}
+  </div>`;
+}
+
+/* ---------- IONIC END ---------- */
+function screenIonicEnd(){
+  return `
+  <div class="card">
+    <div class="emoji">🛒✅</div>
+    <h1>خرید کامل شد!</h1>
+    <p>اکسیژن همه خوراکی‌ها را خرید و سه ترکیب یونی ساخت:</p>
+    <div class="eq" style="text-align:right;direction:rtl;line-height:2.1;font-size:14px">
+      🥤&nbsp; 2Na + O <span class="arrow">←</span> <b>Na₂O</b> (نوشابه)<br>
+      🍟&nbsp; Mg + O <span class="arrow">←</span> <b>MgO</b> (چیپس)<br>
+      🍿&nbsp; 2Li + O <span class="arrow">←</span> <b>Li₂O</b> (پفک)
+    </div>
+    <div class="hint ok">
+      <b>ویژگی ترکیب یونی:</b><br>
+      • از <b>فلز + نافلز</b> ساخته می‌شود<br>
+      • ذره‌های سازنده آن <b>یون</b> هستند (کاتیون + آنیون)<br>
+      • در حالت جامد، یون‌ها در شبکه بلوری قفل‌اند
+    </div>
+    <p>حالا وقتشه بقیه خانواده برن طبیعت و <b>سفره اشتراکی</b> پهن کنن! 🌳</p>
+    <button class="btn green" data-act="go" data-to="covIntro">برو به پیک‌نیک 🧺</button>
+  </div>`;
+}
+
+/* ---------- COVALENT INTRO ---------- */
+function screenCovIntro(){
+  return `
+  <div class="card">
+    <h2><span class="num">۲</span> پیک‌نیک در طبیعت 🌳</h2>
+    <p>دو خانواده رسیدند. حالا هیچ‌کس نمی‌خواهد الکترونش را <b>کامل ببخشد</b> —
+       همه دوست دارند الکترون‌ها را <b>با هم روی سفره مشترک</b> بگذارند.</p>
+    <div class="hint">
+      🧺 هر بار دو اتم کنار هم می‌نشینند، یک <b>سفره مشترک</b> پهن می‌کنند و هر کدام
+      تعدادی از الکترون‌های لایه آخرشان را روی سفره می‌گذارند.
+      به این کار <b>پیوند اشتراکی (کووالانسی)</b> می‌گویند.
+    </div>
+    <div class="hint warn">
+      ⚠️ <b>تصحیح علمی:</b> گوگرد و نیتروژن در طبیعت فقط ترکیب‌های پیچیده‌ای مثل S₄N₄ می‌سازند که
+      برای شروع یادگیری مناسب نیست. پس از مولکول‌های ساده و واقعی
+      <b>HCl</b>، <b>OF₂</b> و <b>NH₃</b> استفاده می‌کنیم.
+    </div>
+    <button class="btn" data-act="go" data-to="covPlay">بفرما سر سفره! 🍽️</button>
+  </div>`;
+}
+
+/* ---------- COVALENT MOLECULES ---------- */
+const MOLECULES = [
+  {
+    id:'HCl', title:'هیدروژن + کلر',
+    formula:'HCl', name:'هیدروژن کلرید (جوهر نمک)',
+    atoms:[
+      {id:'H',  sym:'H',  x:110, y:150, scale:0.95, start:0,   maxSlot:4},
+      {id:'Cl', sym:'Cl', x:300, y:150, scale:0.92, start:180, maxSlot:8}
+    ],
+    bonds:[{a:'H', b:'Cl'}],
+    tips:'هیدروژن ۱ و کلر ۷ الکترون در لایه آخر دارد. هر دو یک الکترون روی سفره می‌گذارند → یک جفت الکترون مشترک.'
+  },
+  {
+    id:'OF2', title:'اکسیژن + فلوئور',
+    formula:'OF₂', name:'اکسیژن دی‌فلوئورید',
+    atoms:[
+      {id:'F1', sym:'F', x:95,  y:150, scale:0.9, start:0,   maxSlot:8},
+      {id:'O',  sym:'O', x:200, y:150, scale:1.0, start:0,   maxSlot:8},
+      {id:'F2', sym:'F', x:305, y:150, scale:0.9, start:180, maxSlot:8}
+    ],
+    bonds:[{a:'O', b:'F1'},{a:'O', b:'F2'}],
+    tips:'اکسیژن به ۲ الکترون و هر فلوئور به ۱ الکترون نیاز دارد. اکسیژن با هر فلوئور یک جفت مشترک می‌سازد → دو پیوند.'
+  },
+  {
+    id:'NH3', title:'نیتروژن + هیدروژن',
+    formula:'NH₃', name:'آمونیاک',
+    atoms:[
+      {id:'N',  sym:'N', x:200, y:160, scale:1.0, start:-90, maxSlot:8},
+      {id:'H1', sym:'H', x:105, y:230, scale:0.9, start:20,  maxSlot:4},
+      {id:'H2', sym:'H', x:295, y:230, scale:0.9, start:160, maxSlot:4},
+      {id:'H3', sym:'H', x:200, y:60,  scale:0.9, start:90,  maxSlot:4}
+    ],
+    bonds:[{a:'N', b:'H1'},{a:'N', b:'H2'},{a:'N', b:'H3'}],
+    tips:'نیتروژن به ۳ الکترون و هر هیدروژن به ۱ الکترون نیاز دارد. نیتروژن با هر سه هیدروژن یک جفت مشترک می‌سازد → سه پیوند.'
+  }
+];
+
+function covSetup(){
+  const m = MOLECULES[S.covIdx];
+  const used = {};
+  m.atoms.forEach(a=>{ used[a.id] = []; });
+  S.cov = { used: used, formed: [], sel: null };
+  S.screen = 'covPlay';
+}
+
+function getMol(){ return MOLECULES[S.covIdx]; }
+
+function covSVG(){
+  const m = getMol();
+  const C = S.cov;
+  let s = '<svg viewBox="0 0 400 300">';
+
+  // bond lines
+  m.bonds.forEach(b=>{
+    if (!C.formed.some(f => (f.a===b.a && f.b===b.b) || (f.a===b.b && f.b===b.a))) return;
+    const A = m.atoms.find(x=>x.id===b.a);
+    const B = m.atoms.find(x=>x.id===b.b);
+    s += '<line class="bondline" x1="'+A.x+'" y1="'+A.y+'" x2="'+B.x+'" y2="'+B.y+'"/>';
+  });
+
+  // atoms
+  m.atoms.forEach(a=>{
+    const usedList = C.used[a.id] || [];
+    const shells = EL[a.sym].shells.slice();
+    const nv = shells[shells.length-1];
+    const sc = a.scale;
+    const er = 4.6*sc;
+    const st = a.start;
+    const slots = Math.max(a.maxSlot, nv);
+
+    let g = '<g class="atom">';
+    shells.forEach((n,i)=>{
+      g += '<circle class="shell" cx="'+a.x+'" cy="'+a.y+'" r="'+(SHELL_R[i]*sc)+'"/>';
+    });
+    const nr = 13*sc;
+    g += '<circle class="nuc" cx="'+a.x+'" cy="'+a.y+'" r="'+nr+'" fill="'+EL[a.sym].c+'"/>';
+    g += '<text x="'+a.x+'" y="'+(a.y+4.2*sc)+'" text-anchor="middle" font-size="'+(11*sc)+'" font-weight="800" fill="'+EL[a.sym].t+'">'+a.sym+'</text>';
+
+    // inner electrons
+    for (let i=0;i<shells.length-1;i++){
+      const n = shells[i];
+      for (let k=0;k<n;k++){
+        const ang = (k*360/n) * Math.PI/180;
+        const ex = a.x + SHELL_R[i]*sc*Math.cos(ang);
+        const ey = a.y + SHELL_R[i]*sc*Math.sin(ang);
+        g += '<circle class="elec" cx="'+ex+'" cy="'+ey+'" r="'+er+'"/>';
+      }
+    }
+    // valence electrons + hit areas
+    for (let k=0;k<nv;k++){
+      if (usedList.indexOf(k) >= 0) continue;
+      const ang = (st + k*360/slots) * Math.PI/180;
+      const ex = a.x + SHELL_R[shells.length-1]*sc*Math.cos(ang);
+      const ey = a.y + SHELL_R[shells.length-1]*sc*Math.sin(ang);
+      const isSel = C.sel && C.sel.atom===a.id && C.sel.slot===k;
+      g += '<circle class="elec val '+(isSel?'pulse':'')+'" cx="'+ex+'" cy="'+ey+'" r="'+(isSel?er*1.6:er)+'"/>';
+      g += '<circle class="hit" data-atom="'+a.id+'" data-slot="'+k+'" cx="'+ex+'" cy="'+ey+'" r="'+(14*sc)+'"/>';
+    }
+    g += '</g>';
+    s += g;
+  });
+
+  // shared tables
+  C.formed.forEach(f=>{
+    const A = m.atoms.find(x=>x.id===f.a);
+    const B = m.atoms.find(x=>x.id===f.b);
+    const mx = (A.x+B.x)/2, my = (A.y+B.y)/2;
+    const dx = B.x-A.x, dy = B.y-A.y;
+    const L = Math.hypot(dx,dy) || 1;
+    const px = -dy/L, py = dx/L;
+    s += '<ellipse class="sofreh" cx="'+mx+'" cy="'+my+'" rx="30" ry="21"/>';
+    s += '<circle class="sharedE" cx="'+(mx+px*7)+'" cy="'+(my+py*7)+'" r="5"/>';
+    s += '<circle class="sharedE" cx="'+(mx-px*7)+'" cy="'+(my-py*7)+'" r="5"/>';
+  });
+
+  s += '</svg>';
+  return s;
+}
+
+function screenCovPlay(){
+  const m = getMol();
+  const C = S.cov;
+  const total = m.bonds.length;
+  const made = C.formed.length;
+  const done = made >= total;
+  let hint;
+  if (done) hint = '🎉 سفره مشترک کامل شد! پیوند اشتراکی شکل گرفت.';
+  else if (!C.sel) hint = '👆 اول روی یک <b>الکترون طلایی</b> از اتم اول ضربه بزن.';
+  else hint = '👍 حالا روی یک الکترون از <b>اتم مجاور</b> ضربه بزن تا جفت مشترک ساخته شود.';
+  return `
+  <div class="card">
+    <h2><span class="num">۲</span> ${m.title} — ${m.formula}</h2>
+    <div class="hint ${done?'ok':''}">${hint}</div>
+    <div class="stage">${covSVG()}</div>
+    <div class="status">
+      <span class="pill">پیوند: ${made}/${total}</span>
+      <span class="pill">${m.name}</span>
+    </div>
+    <div class="hint warn" style="font-size:12.5px">${m.tips}</div>
+    ${done ? `
+      <button class="btn green" data-act="nextMol">
+        ${S.covIdx < MOLECULES.length-1 ? 'مولکول بعدی ➡️' : 'پایان پیوند اشتراکی ✅'}
+      </button>
+    ` : ''}
+  </div>`;
+}
+
+function screenCovEnd(){
+  return `
+  <div class="card">
+    <div class="emoji">🧺🎉</div>
+    <h1>پیک‌نیک اشتراکی تمام شد!</h1>
+    <p>هر سه مولکول با <b>اشتراک الکترون</b> ساخته شدند: HCl ، OF₂ ، NH₃</p>
+    <div class="hint ok">
+      <b>ویژگی ترکیب اشتراکی (مولکولی):</b><br>
+      • از <b>دو نافلز</b> ساخته می‌شود<br>
+      • ذره‌های سازنده آن <b>مولکول</b> است (نه یون)<br>
+      • الکترون‌ها بین دو اتم <b>مشترک</b> می‌شوند<br>
+      • بین مولکول‌ها پیوند ضعیف است → دمای ذوب/جوش پایین
+    </div>
+    <table class="tbl">
+      <tr><th>ویژگی</th><th>ترکیب یونی</th><th>ترکیب اشتراکی</th></tr>
+      <tr><td>سازنده</td><td>فلز+نافلز</td><td>نافلز+نافلز</td></tr>
+      <tr><td>ذره</td><td class="yes">یون</td><td class="yes">مولکول</td></tr>
+      <tr><td>الکترون</td><td>داد و ستد</td><td>مشترک</td></tr>
+    </table>
+    <button class="btn gold" data-act="go" data-to="lab">آزمایشگاه رسانایی ⚡</button>
+  </div>`;
+}
+
+/* ---------- CONDUCTIVITY LAB ---------- */
+const LAB = {
+  'ionic-solid':  { name:'جامد یونی (نمک NaCl)',  cond:false, icon:'🧂', note:'یون‌ها در شبکه بلوری قفل‌اند و نمی‌توانند حرکت کنند.' },
+  'ionic-melt':   { name:'مذاب یونی (نمک مذاب)', cond:true,  icon:'🔥', note:'یون‌ها آزاد شده‌اند و می‌توانند بار را حمل کنند.' },
+  'ionic-sol':    { name:'محلول یونی (آب‌نمک)',   cond:true,  icon:'💧', note:'یون‌ها در آب جدا و آزاد می‌شوند → رسانا.' },
+  'cov-solid':    { name:'جامد مولکولی (شکر)',    cond:false, icon:'🍬', note:'مولکول‌ها خنثی‌اند و یون آزاد وجود ندارد.' },
+  'cov-sol':      { name:'محلول مولکولی (شکر)',   cond:false, icon:'🥤', note:'مولکول‌ها خنثی‌اند، حتی در آب هم یون تولید نمی‌کنند.' }
+};
+
+function screenLab(){
+  const cur = LAB[S.labSub];
+  const opts = Object.keys(LAB).map(k=>`
+    <button class="chip ${S.labSub===k?'sel':''}" data-act="labPick" data-k="${k}" style="text-align:right;padding:10px 12px;font-size:12.5px">
+      <span style="font-size:17px">${LAB[k].icon}</span>
+      <span style="display:block;font-size:12.5px;font-weight:700">${LAB[k].name}</span>
+    </button>
+  `).join('');
+  return `
+  <div class="card">
+    <h2><span class="num">۳</span> آزمایشگاه رسانایی ⚡</h2>
+    <p>یک ماده را انتخاب کن و ببین آیا <b>لامپ روشن می‌شود</b> یا نه.</p>
+    <div class="stage" style="padding:14px">
+      <div style="display:flex;gap:14px;align-items:center;justify-content:space-around">
+        <div style="text-align:center">
+          <div class="bulb ${cur.cond?'on':''}">💡</div>
+          <div style="font-size:12px;color:var(--dim);margin-top:6px">لامپ</div>
+        </div>
+        <div style="text-align:center;font-size:12px;color:var(--dim)">
+          <div style="font-size:26px">🔋</div>
+          باتری
+        </div>
+      </div>
+      <div style="margin-top:14px;text-align:center">
+        <div style="font-size:34px">${cur.icon}</div>
+        <div style="font-weight:800;font-size:13.5px;margin-top:4px">${cur.name}</div>
+      </div>
+    </div>
+    <div class="hint ${cur.cond?'ok':''}">
+      ${cur.cond ? '⚡ <b>رسانا</b> — ' : '🚫 <b>نارسانا</b> — '}${cur.note}
+    </div>
+    <p style="font-size:13px;font-weight:800;margin-top:12px">ماده را انتخاب کن:</p>
+    <div class="choices" style="grid-template-columns:1fr 1fr;gap:8px">${opts}</div>
+    <table class="tbl" style="margin-top:14px">
+      <tr><th>حالت</th><th>یونی</th><th>مولکولی</th></tr>
+      <tr><td>جامد</td><td class="no">نارسانا</td><td class="no">نارسانا</td></tr>
+      <tr><td>مذاب</td><td class="yes">رسانا</td><td>—</td></tr>
+      <tr><td>محلول</td><td class="yes">رسانا</td><td class="no">نارسانا</td></tr>
+    </table>
+    <button class="btn green" data-act="go" data-to="summary">جمع‌بندی نهایی 🎓</button>
+  </div>`;
+}
+
+/* ---------- SUMMARY ---------- */
+function screenSummary(){
+  return `
+  <div class="card">
+    <div class="emoji">🎓</div>
+    <h1>تبریک! فارغ‌التحصیل شدی</h1>
+    <p class="sub">حالا می‌دانی:</p>
+    <ul>
+      <li>✅ <b>ترکیب یونی</b> = فلز + نافلز، با داد و ستد الکترون</li>
+      <li>✅ <b>ترکیب اشتراکی</b> = دو نافلز، با اشتراک الکترون</li>
+      <li>✅ <b>کاتیون</b> = یون مثبت (الکترون داده)، <b>آنیون</b> = یون منفی (الکترون گرفته)</li>
+      <li>✅ جامد یونی و مولکول‌ها نارسانا؛ مذاب و محلول یونی رسانا</li>
+      <li>✅ رسم پیوند اشتراکی با مدل بور</li>
+    </ul>
+    <div class="hint ok">
+      🌿 داستان سیزده‌بدر تمام شد، اما پیوندهای شیمیایی هر روز دور و بر ما هستند!
+    </div>
+    <button class="btn gold" data-act="restart">🔄 بازی از اول</button>
+  </div>
+  <div class="card">
+    <div class="credit">
+      ساخته‌شده توسط <b>مهندس رحمانی</b><br>
+      نسخهٔ آموزشی — سیزده‌بدر پیوندها 🌳
+    </div>
+  </div>`;
+}
+
+/* =========================================================
+   RENDER + ROUTER
+   ========================================================= */
+function stepFor(s){
+  if (s==='intro') return 0;
+  if (s==='ionicIntro'||s==='shopSelect'||s==='shopPlay'||s==='ionicEnd') return 1;
+  if (s.indexOf('cov')===0) return 2;
+  if (s==='lab'||s==='summary') return 3;
+  return 0;
+}
+
+function render(){
+  const s = S.screen;
+  let body = '';
+  if (s==='intro')            body = screenIntro();
+  else if (s==='ionicIntro')  body = screenIonicIntro();
+  else if (s==='shopSelect')  body = screenShopSelect();
+  else if (s==='shopPlay')    body = screenShopPlay();
+  else if (s==='ionicEnd')    body = screenIonicEnd();
+  else if (s==='covIntro')    body = screenCovIntro();
+  else if (s==='covPlay')     body = screenCovPlay();
+  else if (s==='covEnd')      body = screenCovEnd();
+  else if (s==='lab')         body = screenLab();
+  else if (s==='summary')     body = screenSummary();
+  else body = screenIntro();
+
+  const st = stepFor(s);
+  const prog = [0,1,2,3].map(i=>'<div class="'+(i<=st?'on':'')+'"></div>').join('');
+
+  app.innerHTML = `
+    <div class="topbar">
+      <div class="brand"><span class="dot"></span> سیزده‌بدر پیوندها</div>
+      <div class="spacer"></div>
+      <button class="iconbtn" data-act="restart" title="شروع دوباره">↻</button>
+    </div>
+    <div class="prog">${prog}</div>
+    ${body}
+  `;
+}
+
+/* =========================================================
+   INTERACTIONS
+   ========================================================= */
+document.addEventListener('click', function(ev){
+  const t = ev.target.closest('[data-act]');
+  const hit = ev.target.closest('.hit');
+
+  // ---- covalent electron selection ----
+  if (hit && S.screen==='covPlay'){
+    const id = hit.getAttribute('data-atom');
+    const slot = parseInt(hit.getAttribute('data-slot'),10);
+    const C = S.cov;
+    const m = getMol();
+    if (C.used[id].indexOf(slot) >= 0) return;
+
+    if (!C.sel){
+      C.sel = { atom:id, slot:slot };
+      render();
+      return;
+    }
+    if (C.sel.atom === id){
+      C.sel = null; render(); return;
+    }
+    const b = m.bonds.find(x =>
+      (x.a===C.sel.atom && x.b===id) || (x.a===id && x.b===C.sel.atom)
+    );
+    const already = C.formed.some(f =>
+      (f.a===C.sel.atom && f.b===id) || (f.a===id && f.b===C.sel.atom)
+    );
+    if (b && !already){
+      C.formed.push({a:C.sel.atom, b:id});
+      C.used[C.sel.atom].push(C.sel.slot);
+      C.used[id].push(slot);
+      C.sel = null;
+      toast('✅ پیوند اشتراکی ساخته شد!', 'good');
+      render();
+    } else {
+      toast('این دو اتم روی سفره‌شان همسایه نیستند!', 'bad');
+      C.sel = null;
+      render();
+    }
+    return;
+  }
+
+  // ---- ionic electron transfer (shopPlay) ----
+  if (hit && S.screen==='shopPlay'){
+    const id = hit.getAttribute('data-atom');
+    const I = S.ionic;
+    if (id==='O'){ toast('اکسیژن الکترون می‌گیرد، نمی‌دهد!', 'bad'); return; }
+    const idx = parseInt(id.replace('M',''),10);
+    const a = I.atoms[idx];
+    if (!a) return;
+    if (a.given >= a.give){ toast('این فلز دیگر الکترونی برای دادن ندارد.', 'bad'); return; }
+    a.given++;
+    I.gained++;
+    if (I.gained === 2){
+      toast('🎉 ترکیب یونی تشکیل شد!', 'good');
+      if (I.completed.indexOf(I.shop) < 0) I.completed.push(I.shop);
+    } else {
+      toast('👌 یک الکترون منتقل شد.', 'good');
+    }
+    render();
+    return;
+  }
+
+  if (!t) return;
+  const act = t.getAttribute('data-act');
+
+  if (act==='go'){
+    const to = t.getAttribute('data-to');
+    if (to==='covPlay'){ S.covIdx=0; covSetup(); }
+    else S.screen = to;
+    render();
+    window.scrollTo(0,0);
+  }
+  else if (act==='pickShop'){
+    shopSetup(t.getAttribute('data-k'));
+    render();
+    window.scrollTo(0,0);
+  }
+  else if (act==='backToShops'){
+    if (S.ionic.completed.length === 3){
+      S.screen = 'ionicEnd';
+    } else {
+      S.screen = 'shopSelect';
+    }
+    render();
+    window.scrollTo(0,0);
+  }
+  else if (act==='nextMol'){
+    if (S.covIdx < MOLECULES.length-1){
+      S.covIdx++;
+      covSetup();
+      render();
+      window.scrollTo(0,0);
+    } else {
+      S.screen = 'covEnd';
+      render();
+      window.scrollTo(0,0);
+    }
+  }
+  else if (act==='labPick'){
+    S.labSub = t.getAttribute('data-k');
+    render();
+  }
+  else if (act==='restart'){
+    S.screen='intro';
+    S.ionic = { completed: [] };
+    S.cov=null; S.covIdx=0; S.labSub='ionic-solid';
+    render();
+    window.scrollTo(0,0);
+  }
+});
+
+/* start */
+render();
+</script>
+</body>
+</html>
